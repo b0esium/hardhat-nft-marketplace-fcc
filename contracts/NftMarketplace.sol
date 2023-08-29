@@ -144,7 +144,7 @@ contract NftMarketplace is ReentrancyGuard {
         }
         s_proceeds[listedItem.seller] += msg.value;
         delete (s_listings[nftAddress][tokenId]);
-        IERC721(nftAddress).safeTransferFrom(msg.sender, listedItem.seller, tokenId);
+        IERC721(nftAddress).safeTransferFrom(listedItem.seller, msg.sender, tokenId);
         emit ItemBought(msg.sender, nftAddress, tokenId, listedItem.price);
     }
 
@@ -161,6 +161,9 @@ contract NftMarketplace is ReentrancyGuard {
         uint256 tokenId,
         uint256 newPrice
     ) external isOwner(nftAddress, tokenId, msg.sender) isListed(nftAddress, tokenId) {
+        if (newPrice <= 0) {
+            revert NftMarketplace__PriceMustBeAboveZero();
+        }
         s_listings[nftAddress][tokenId].price = newPrice;
         emit ItemListed(msg.sender, nftAddress, tokenId, newPrice);
     }

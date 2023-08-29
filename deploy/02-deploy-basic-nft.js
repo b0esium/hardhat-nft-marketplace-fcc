@@ -16,7 +16,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         console.log("Verifying...")
-        await verify(BasicNft.address, args)
+        await verify(basicNft.address, args)
         console.log("Verified!")
     }
 }
